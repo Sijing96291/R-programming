@@ -37,3 +37,29 @@ complete <- function(directory,id=1:332){
         colnames(dat)<-c("id","nobs")
         dat
 }
+
+
+
+
+#####################part3############################
+corr<-function(directory,threshold=0){
+        files<-list.files(directory,full.names=TRUE)
+        
+        #create a numberic which the default length=0
+        dat<-vector(mode="numeric",length=0)
+        
+        for (i in 1:332){
+                #read the file
+                nafiles<-read.csv(files[i])
+                
+                #obs represent number of complete obs in the file
+                good<-complete.cases(nafiles)
+                obs<-sum(good)
+                #if obs bigger than the threshold, then compute the correlation
+                if (obs>threshold) {
+                        complete<-nafiles[good,]
+                        dat<-c(dat,cor(complete$sulfate,complete$nitrate))
+                }
+        }
+        dat
+}
