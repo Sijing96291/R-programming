@@ -136,3 +136,110 @@ rankhospital<-function(state,outcome,num="best"){
 }
 
         
+
+
+
+#write a function that returns a 2-column data frame containing the hospital in each state
+#that has the ranking specified in num
+
+rankall<-function(outcome,num="best"){
+        data<-read.csv("outcome-of-care-measures.csv",colClasses = "character")
+        
+        
+        if(outcome=="heart attack"){
+                a_data<-data[,c(2,7,11)]
+                
+                #split the dataset into groups by State
+                # s is a list
+                s<-split(a_data,a_data$State)
+                
+                #apply order() function to each group,and remove NA values
+                #l is a list
+                l<-lapply(s,function(x) x[order(as.numeric(x[,3]),x[,1],na.last=NA),])
+                
+                #generate a column "Rank" for hospitals grouped by State
+                #r is a list
+                r<-lapply(l,function(x) cbind(x,"Rank"=seq(1,nrow(x),1)))
+                
+                if (num=="best"){
+                        
+                        #select the first row from each State
+                        f<-lapply(r,function(x) x[1,c(1,2)])
+                        
+                        #combine list of data frames into one data frame
+                        dat<-do.call(rbind,f)
+                        
+                }else if(num=="worst"){
+                        
+                        #select the last row from each State
+                         f<-lapply(r,function(x) x[nrow(x),c(1,2)])
+                         dat<-do.call(rbind,f)
+                        
+                }else {
+                        #select the the "num"th row from each State
+                        f<-lapply(r,function(x) x[num,c(1,2)])
+                        dat<-do.call(rbind,f)
+                }
+                
+                
+                
+                
+        }else if(outcome=="heart failure"){
+                
+                b_data<-data[,c(2,7,17)]
+                s<-split(b_data,b_data$State)
+                l<-lapply(s,function(x) x[order(as.numeric(x[,3]),x[,1],na.last=NA),])
+                r<-lapply(l,function(x) cbind(x,"Rank"=seq(1,nrow(x),1)))
+                
+                if (num=="best"){
+                        
+                        #select the first row from each State
+                        f<-lapply(r,function(x) x[1,c(1,2)])
+                        
+                        #combine list of data frames into one data frame
+                        dat<-do.call(rbind,f)
+                        
+                }else if(num=="worst"){
+                        
+                        #select the last row from each State
+                        f<-lapply(r,function(x) x[nrow(x),c(1,2)])
+                        dat<-do.call(rbind,f)
+                        
+                }else {
+                        #select the the "num"th row from each State
+                        f<-lapply(r,function(x) x[num,c(1,2)])
+                        dat<-do.call(rbind,f)
+                }
+                
+        }else if(outcome=="pneumonia"){
+                
+                c_data<-data[,c(2,7,23)]
+                s<-split(b_data,b_data$State)
+                l<-lapply(s,function(x) x[order(as.numeric(x[,3]),x[,1],na.last=NA),])
+                r<-lapply(l,function(x) cbind(x,"Rank"=seq(1,nrow(x),1)))
+                
+                if (num=="best"){
+                        
+                        #select the first row from each State
+                        f<-lapply(r,function(x) x[1,c(1,2)])
+                        
+                        #combine list of data frames into one data frame
+                        dat<-do.call(rbind,f)
+                        
+                }else if(num=="worst"){
+                        
+                        #select the last row from each State
+                        f<-lapply(r,function(x) x[nrow(x),c(1,2)])
+                        dat<-do.call(rbind,f)
+                        
+                }else {
+                        #select the the "num"th row from each State
+                        f<-lapply(r,function(x) x[num,c(1,2)])
+                        dat<-do.call(rbind,f)
+                }
+                
+        }else{
+                stop("invalid outcome")
+        }
+}
+
