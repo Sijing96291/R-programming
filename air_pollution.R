@@ -63,3 +63,5 @@ corr<-function(directory,threshold=0){
         }
         dat
 }
+
+print("I'm happy with it!")
